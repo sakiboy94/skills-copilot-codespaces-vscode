@@ -1,34 +1,20 @@
-// create web server
+// create web server with express
 const express = require('express');
-const cors = require('cors');
-const app = express();
-const port = 4001;
+const router = express.Router();
+// import comment controller
+const commentController = require('../controllers/comments');
+// import auth middleware
+const auth = require('../middleware/auth');
 
-app.use(cors());
+// create a comment
+router.post('/', auth, commentController.createComment);
+// get all comments
+router.get('/', auth, commentController.getAllComments);
+// get a comment by id
+router.get('/:id', auth, commentController.getOneComment);
+// update a comment
+router.put('/:id', auth, commentController.updateComment);
+// delete a comment
+router.delete('/:id', auth, commentController.deleteComment);
 
-// create route handler for get request to /comments
-app.get('/comments', (req, res) => {
-  // send back json data
-  res.json(comments);
-});
-
-app.listen(port, () => {
-  console.log(`Web server is listening on port ${port}!`);
-});
-
-const comments = [
-  {
-    id: 1,
-    username: 'John',
-    comment: 'This is a comment!'
-  },
-  {
-    id: 2,
-    username: 'Mary',
-    comment: 'This is also a comment!'
-  },
-  {
-    id: 3,
-    username: 'Steve',
-    comment: 'Yet another comment!'
-  }]
+module.exports = router;
